@@ -27,7 +27,7 @@ app.use('/api/settings', settingsRoutes);
 
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://eventra-iota.vercel.app',
   credentials: true
 }));
 app.use('/uploads', express.static('uploads'));
