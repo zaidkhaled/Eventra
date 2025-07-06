@@ -62,10 +62,10 @@ exports.createEventWithImages = async (req, res) => {
       return res.status(400).json({ message: 'You can upload a maximum of 10 description images.' });
     }
 
-    const coverImage = `http://localhost:5000/uploads/${req.files.image[0].filename}`;
+    const coverImage = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
 
     const descriptionImageUrls = descriptionImages.map(
-      (file) => `http://localhost:5000/uploads/${file.filename}`
+      (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
     );
 
     const event = new Event({
@@ -101,13 +101,13 @@ exports.updateEvent = async (req, res) => {
 
     // تحديث صورة الغلاف إن وجدت
     if (req.files?.image?.[0]) {
-      event.image = `http://localhost:5000/uploads/${req.files.image[0].filename}`;
+      event.image = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
     }
 
     // تحديث صور الوصف
     if (req.files?.descriptionImages?.length) {
       const newImages = req.files.descriptionImages.map(
-        (file) => `http://localhost:5000/uploads/${file.filename}`
+        (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
       );
 
       const currentImagesCount = event.descriptionImages?.length || 0;

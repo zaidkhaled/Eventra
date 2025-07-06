@@ -37,7 +37,7 @@ export default function BookingsPage() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/bookings');
+      const res = await axios.get('https://eventra-rhna.onrender.com/api/bookings');
       setBookings(res.data);
       setError('');
     } catch (err) {
@@ -53,7 +53,7 @@ export default function BookingsPage() {
 
   const deleteBooking = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/bookings/${id}`);
+      await axios.delete(`https://eventra-rhna.onrender.com/api/bookings/${id}`);
       toast({
         title: t('booking_deleted'),
         status: 'success',

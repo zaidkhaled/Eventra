@@ -37,7 +37,7 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users');
+      const res = await axios.get('https://eventra-rhna.onrender.com/api/users');
       setUsers(res.data);
       setError('');
     } catch (err) {
@@ -53,7 +53,7 @@ export default function UsersPage() {
 
   const deleteUser = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`);
+      await axios.delete(`https://eventra-rhna.onrender.com/api/users/${id}`);
       toast({
         title: t('user_deleted'),
         status: 'success',
@@ -74,7 +74,7 @@ export default function UsersPage() {
   const toggleRole = async (id: string, currentRole: string) => {
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
     try {
-      await axios.patch(`http://localhost:5000/api/users/${id}/role`, {
+      await axios.patch(`https://eventra-rhna.onrender.com/api/users/${id}/role`, {
         role: newRole,
       });
       toast({

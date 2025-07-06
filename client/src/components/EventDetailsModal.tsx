@@ -52,7 +52,7 @@ export default function EventDetailsModal({
     try {
       setLoading(true)
       const user = JSON.parse(localStorage.getItem('user') || '{}')
-      const { data } = await axios.post('http://localhost:5000/api/bookings', {
+      const { data } = await axios.post('https://eventra-rhna.onrender.com/api/bookings', {
         userId: user.id,
         eventId: event._id
       })
@@ -161,7 +161,7 @@ export default function EventDetailsModal({
       onClick={async () => {
         try {
           const user = JSON.parse(localStorage.getItem('user') || '{}')
-          const { data } = await axios.get(`http://localhost:5000/api/bookings/user/${user.id}`)
+          const { data } = await axios.get(`https://eventra-rhna.onrender.com/api/bookings/user/${user.id}`)
           const booking = data.find((b: any) => b.event._id === event._id)
           if (booking) setQrCode(booking.qrCode)
         } catch (err) {

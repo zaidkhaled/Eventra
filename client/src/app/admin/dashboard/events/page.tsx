@@ -33,7 +33,7 @@ export default function AdminEventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/events');
+        const res = await axios.get('https://eventra-rhna.onrender.com/api/events');
         setEvents(res.data);
       } catch (err) {
         console.error('Error fetching events:', err);

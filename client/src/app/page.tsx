@@ -123,7 +123,7 @@ export default function HomePage() {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/events')
+      const response = await axios.get('https://eventra-rhna.onrender.com/api/events')
       setEvents(response.data)
     } catch (error) {
       console.error('Error fetching events:', error)
@@ -136,7 +136,7 @@ export default function HomePage() {
 
     const user = JSON.parse(storedUser)
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/bookings/user/${user.id}`)
+      const { data } = await axios.get(`https://eventra-rhna.onrender.com/api/bookings/user/${user.id}`)
       const ids = data.map((booking: any) => booking.event._id)
       setBookedEventIds(ids)
     } catch (error) {
@@ -168,7 +168,7 @@ export default function HomePage() {
 <Box
   position="relative"
   height="80vh"
-  backgroundImage="url('http://localhost:5000/uploads/hero.png')"
+  backgroundImage="url('https://eventra-rhna.onrender.com/uploads/hero.png')"
   backgroundSize="cover"
   backgroundPosition="center"
 >

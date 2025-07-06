@@ -40,7 +40,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/admin/stats');
+        const res = await axios.get('https://eventra-rhna.onrender.com/api/admin/stats');
         setStats(res.data);
         setError('');
       } catch (err: any) {
@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
 
     const fetchRecentEvents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/admin/recent-events');
+        const res = await axios.get('https://eventra-rhna.onrender.com/api/admin/recent-events');
         setRecentEvents(res.data);
       } catch (err) {
         console.error('Error fetching recent events:', err);
@@ -60,7 +60,7 @@ export default function AdminDashboardPage() {
     };
     const fetchSettings = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/settings');
+      const res = await axios.get('https://eventra-rhna.onrender.com/api/settings');
       setSettings(res.data);
     } catch (err) {
       console.error('Failed to fetch settings:', err);
@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
 
 //   const fetchSettings = async () => {
 //   try {
-//     const res = await axios.get('http://localhost:5000/api/settings');
+//     const res = await axios.get('https://eventra-rhna.onrender.com/api/settings');
 //     setSettings(res.data);
 //   } catch (err) {
 //     console.error('Failed to fetch settings:', err);
@@ -87,7 +87,7 @@ const toggleSetting = async (key: keyof typeof settings) => {
   try {
     const newValue = !settings[key];
 
-    const res = await axios.put('http://localhost:5000/api/settings', {
+    const res = await axios.put('https://eventra-rhna.onrender.com/api/settings', {
       key,
       value: newValue,
     });

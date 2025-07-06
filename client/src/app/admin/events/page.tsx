@@ -66,7 +66,7 @@ const [formData, setFormData] = useState({
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/events');
+      const res = await axios.get('https://eventra-rhna.onrender.com/api/events');
       setEvents(res.data);
     } catch (err) {
       toast({
@@ -131,7 +131,7 @@ formData.newDescriptionImages.forEach((file) => {
   }
 
   try {
-    const res = await axios.put(`http://localhost:5000/api/events/${selectedEvent._id}`, updatedFormData, {
+    const res = await axios.put(`https://eventra-rhna.onrender.com/api/events/${selectedEvent._id}`, updatedFormData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -161,7 +161,7 @@ formData.newDescriptionImages.forEach((file) => {
 
 const handleDeleteEvent = async (id: string) => {
   try {
-    await axios.delete(`http://localhost:5000/api/events/${id}`);
+    await axios.delete(`https://eventra-rhna.onrender.com/api/events/${id}`);
     toast({
       title: t('event_deleted'),
       status: 'success',
@@ -182,7 +182,7 @@ const handleDeleteEvent = async (id: string) => {
 
 const handleDeleteDescriptionImage = async (eventId: string, imageUrl: string) => {
   try {
-    const res = await axios.put(`http://localhost:5000/api/events/${eventId}/remove-description-image`, {
+    const res = await axios.put(`https://eventra-rhna.onrender.com/api/events/${eventId}/remove-description-image`, {
       imageUrl,
     });
 
@@ -213,7 +213,7 @@ const handleDeleteDescriptionImage = async (eventId: string, imageUrl: string) =
 
 const handleDeleteCoverImage = async (eventId: string) => {
   try {
-    const res = await axios.put(`http://localhost:5000/api/events/${eventId}/remove-cover`);
+    const res = await axios.put(`https://eventra-rhna.onrender.com/api/events/${eventId}/remove-cover`);
     setEvents((prev) =>
       prev.map((event) =>
         event._id === eventId ? { ...event, image: '' } : event
@@ -258,7 +258,7 @@ const handleCreateEvent = async () => {
   });
 
   try {
-    const res = await axios.post('http://localhost:5000/api/events/with-images', formData, {
+    const res = await axios.post('https://eventra-rhna.onrender.com/api/events/with-images', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
