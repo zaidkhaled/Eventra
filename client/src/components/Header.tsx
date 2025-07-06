@@ -42,7 +42,10 @@ useEffect(() => {
 const handleLogout = () => {
   localStorage.removeItem('user')
   window.dispatchEvent(new Event('userUpdated'))
+  router.push('/')
   window.location.reload() // ✅ إعادة تحميل الصفحة بالكامل
+
+
 }
 
 
