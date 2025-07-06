@@ -42,11 +42,9 @@ useEffect(() => {
 const handleLogout = () => {
   localStorage.removeItem('user')
   window.dispatchEvent(new Event('userUpdated'))
-  router.push('/')
-  window.location.reload() // ✅ إعادة تحميل الصفحة بالكامل
-
-
+  window.location.href = '/' // ⬅️ هذا يعيد التوجيه ويعمل reload تلقائي
 }
+
 
 
   const handleLogin = () => {
