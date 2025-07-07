@@ -6,7 +6,7 @@ const cloudinary = require('../utils/cloudinary'); // ملف إعداد Cloudina
 const router = express.Router();
 const upload = multer({ dest: 'temp/' }); // ملفات مؤقتة
 
-router.post('/upload', upload.single('file'), async (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
   try {
     const filePath = req.file.path;
 
