@@ -482,15 +482,15 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
     formData,
     {
       onUploadProgress: (progressEvent) => {
-        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        setUploadProgress(percent);
+        if (progressEvent.total) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
+        }
       },
     }
   );
 
-  // بعد انتهاء التحميل، أعد تعيين النسبة
   setUploadProgress(null);
-
   return response.data.secure_url;
 };
 
