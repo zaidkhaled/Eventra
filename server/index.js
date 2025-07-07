@@ -7,7 +7,7 @@ const eventRoutes = require('./routes/eventRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
-const uploadRoutess = require('./routes/upload')
+const uploadRoutes = require('./routes/upload')
 
 
 
