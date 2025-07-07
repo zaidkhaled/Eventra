@@ -42,6 +42,7 @@ export default function AdminEventsPage() {
 
   const [events, setEvents] = useState<EventType[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 const [formData, setFormData] = useState({
   title: '',
   description: '',
@@ -445,19 +446,56 @@ const handleCreateEvent = async () => {
 //   }
 // };
 
-const uploadToCloudinary = async (file: File) => {
+// const uploadToCloudinary = async (file: File) => {
+//   const formData = new FormData();
+//   formData.append('file', file);
+//   formData.append('upload_preset', 'eventra_unsigned'); // استبدل بقيمتك من Cloudinary
+
+//   try {
+//     const res = await axios.post('https://api.cloudinary.com/v1_1/daqgjgomk/image/upload', formData);
+//     return res.data;
+//   } catch (err) {
+//     console.error('Upload failed', err);
+//     return null;
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+const uploadToCloudinary = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', 'eventra_unsigned'); // استبدل بقيمتك من Cloudinary
+  formData.append('upload_preset', 'eventra_unsigned');
 
-  try {
-    const res = await axios.post('https://api.cloudinary.com/v1_1/daqgjgomk/image/upload', formData);
-    return res.data;
-  } catch (err) {
-    console.error('Upload failed', err);
-    return null;
-  }
+  const response = await axios.post(
+    'https://api.cloudinary.com/v1_1/daqgjgomk/image/upload',
+    formData,
+    {
+      onUploadProgress: (progressEvent) => {
+        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(percent);
+      },
+    }
+  );
+
+  // بعد انتهاء التحميل، أعد تعيين النسبة
+  setUploadProgress(null);
+
+  return response.data.secure_url;
 };
+
+
+
 
   return (
     <Box p={4}>
@@ -608,6 +646,14 @@ const uploadToCloudinary = async (file: File) => {
 
           </ModalBody>
           <ModalFooter>
+            {uploadProgress !== null && (
+  <Box mt={3}>
+    <Text fontSize="sm" mb={1}>Uploading: {uploadProgress}%</Text>
+    <Box w="100%" bg="gray.200" borderRadius="md" overflow="hidden">
+      <Box h="8px" bg="green.400" width={`${uploadProgress}%`} transition="width 0.3s" />
+    </Box>
+  </Box>
+)}
             <Button colorScheme="orange" onClick={handleSaveEdit}>{t('save')}</Button>
             <Button onClick={onEditClose} ml={3}>{t('cancel')}</Button>
           </ModalFooter>
