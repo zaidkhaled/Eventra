@@ -328,25 +328,23 @@ const handleDeleteCoverImage = async (eventId: string) => {
 
 const handleCreateEvent = async () => {
   try {
+    setUploadProgress(0); // بداية التحميل
+
     // 1. رفع صورة الغلاف
     let coverImageUrl = '';
     if (newEvent.imageFile) {
-      const coverForm = new FormData();
-      coverForm.append('file', newEvent.imageFile);
-      const coverRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', coverForm);
-      coverImageUrl = coverRes.data.url;
+      const res = await uploadToCloudinary(newEvent.imageFile);
+      if (res) coverImageUrl = res;
     }
 
     // 2. رفع الصور الوصفية
     const descriptionImageUrls: string[] = [];
     for (const file of newEvent.descriptionImages) {
-      const descForm = new FormData();
-      descForm.append('file', file);
-      const descRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', descForm);
-      descriptionImageUrls.push(descRes.data.url);
+      const res = await uploadToCloudinary(file);
+      if (res) descriptionImageUrls.push(res);
     }
 
-    // 3. إرسال بيانات الفعالية مع روابط الصور
+    // 3. إرسال البيانات
     await axios.post('https://eventra-rhna.onrender.com/api/events/with-images', {
       title: newEvent.title,
       description: newEvent.description,
@@ -371,8 +369,11 @@ const handleCreateEvent = async () => {
     fetchEvents();
   } catch (err) {
     toast({ title: t('event_create_failed'), status: 'error', duration: 3000, isClosable: true });
+  } finally {
+    setUploadProgress(null); // إنهاء التحميل
   }
 };
+
 
 
 
