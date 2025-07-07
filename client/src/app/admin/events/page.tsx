@@ -124,9 +124,9 @@ const handleSaveEdit = async () => {
   let uploadedCoverImage = selectedEvent.image;
   if (formData.newImageFile instanceof File) {
     const res = await uploadToCloudinary(formData.newImageFile);
-    if (res?.url) {
-      uploadedCoverImage = res.url;
-    }
+  if (res) {
+    uploadedCoverImage = res;
+  }
   }
 
   // 2. ارفع الصور الوصفية الجديدة
