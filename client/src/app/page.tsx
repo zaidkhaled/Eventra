@@ -168,7 +168,7 @@ export default function HomePage() {
 <Box
   position="relative"
   height="80vh"
-  backgroundImage="url('https://eventra-rhna.onrender.com/uploads/hero.png')"
+  backgroundImage="url('https://res.cloudinary.com/daqgjgomk/image/upload/v1751895998/eventra_uploads/v5x6iryb9vljezxijcmj.png')"
   backgroundSize="cover"
   backgroundPosition="center"
 >
