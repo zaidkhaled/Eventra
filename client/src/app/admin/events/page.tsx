@@ -709,6 +709,26 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 
           </ModalBody>
           <ModalFooter>
+
+
+
+
+
+
+
+ {uploadProgress !== null && (
+  <Box mt={3}>
+    <Text fontSize="sm" mb={1}>Uploading: {uploadProgress}%</Text>
+    <Box w="100%" bg="gray.200" borderRadius="md" overflow="hidden">
+      <Box h="8px" bg="green.400" width={`${uploadProgress}%`} transition="width 0.3s" />
+    </Box>
+  </Box>
+)}
+
+
+
+
+
             <Button colorScheme="green" onClick={handleCreateEvent}>{t('create')}</Button>
             <Button onClick={onAddClose} ml={3}>{t('cancel')}</Button>
           </ModalFooter>
