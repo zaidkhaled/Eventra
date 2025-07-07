@@ -645,9 +645,9 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 
 
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter flexDirection="column" alignItems="flex-start">
             {uploadProgress !== null && (
-  <Box mt={3}>
+  <Box mb={3} w="100%">
     <Text fontSize="sm" mb={1}>Uploading: {uploadProgress}%</Text>
     <Box w="100%" bg="gray.200" borderRadius="md" overflow="hidden">
       <Box h="8px" bg="green.400" width={`${uploadProgress}%`} transition="width 0.3s" />
@@ -708,30 +708,21 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 
 
           </ModalBody>
-          <ModalFooter>
-
-
-
-
-
-
-
- {uploadProgress !== null && (
-  <Box mt={3}>
-    <Text fontSize="sm" mb={1}>Uploading: {uploadProgress}%</Text>
-    <Box w="100%" bg="gray.200" borderRadius="md" overflow="hidden">
-      <Box h="8px" bg="green.400" width={`${uploadProgress}%`} transition="width 0.3s" />
+          <ModalFooter flexDirection="column" alignItems="flex-start">
+  {uploadProgress !== null && (
+    <Box mb={3} w="100%">
+      <Text fontSize="sm" mb={1}>Uploading: {uploadProgress}%</Text>
+      <Box w="100%" bg="gray.200" borderRadius="md" overflow="hidden">
+        <Box h="8px" bg="green.400" width={`${uploadProgress}%`} transition="width 0.3s" />
+      </Box>
     </Box>
-  </Box>
-)}
+  )}
+  <Flex w="100%" justify="flex-end">
+    <Button colorScheme="green" onClick={handleCreateEvent}>{t('create')}</Button>
+    <Button onClick={onAddClose} ml={3}>{t('cancel')}</Button>
+  </Flex>
+</ModalFooter>
 
-
-
-
-
-            <Button colorScheme="green" onClick={handleCreateEvent}>{t('create')}</Button>
-            <Button onClick={onAddClose} ml={3}>{t('cancel')}</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>
