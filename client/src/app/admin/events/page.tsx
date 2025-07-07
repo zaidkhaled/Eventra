@@ -134,7 +134,7 @@ const handleSaveEdit = async () => {
   for (const img of formData.newDescriptionImages) {
     if (img instanceof File) {
       const res = await uploadToCloudinary(img);
-      if (res?.url) newDescImageUrls.push(res.url);
+      if (res) newDescImageUrls.push(res);
     }
   }
 
