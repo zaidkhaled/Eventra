@@ -48,41 +48,92 @@ exports.getAllEvents = async (req, res) => {
 // };
 
 
+// exports.createEventWithImages = async (req, res) => {
+//   try {
+//     const { title, description, location, date } = req.body;
+
+//     if (!req.files || !req.files.image) {
+//       return res.status(400).json({ message: 'Cover image is required' });
+//     }
+
+//     const descriptionImages = req.files.descriptionImages || [];
+
+//     if (descriptionImages.length > 10) {
+//       return res.status(400).json({ message: 'You can upload a maximum of 10 description images.' });
+//     }
+
+//     const coverImage = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
+
+//     const descriptionImageUrls = descriptionImages.map(
+//       (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
+//     );
+
+//     const event = new Event({
+//       title,
+//       description,
+//       location,
+//       date,
+//       image: coverImage,
+//       descriptionImages: descriptionImageUrls,
+//     });
+
+//     await event.save();
+//     res.status(201).json(event);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
+
+
+
+
+
+
 exports.createEventWithImages = async (req, res) => {
   try {
-    const { title, description, location, date } = req.body;
+    const { title, description, location, date, image, descriptionImages } = req.body;
 
-    if (!req.files || !req.files.image) {
+    if (!image) {
       return res.status(400).json({ message: 'Cover image is required' });
     }
 
-    const descriptionImages = req.files.descriptionImages || [];
-
-    if (descriptionImages.length > 10) {
+    if (descriptionImages?.length > 10) {
       return res.status(400).json({ message: 'You can upload a maximum of 10 description images.' });
     }
-
-    const coverImage = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
-
-    const descriptionImageUrls = descriptionImages.map(
-      (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
-    );
 
     const event = new Event({
       title,
       description,
       location,
       date,
-      image: coverImage,
-      descriptionImages: descriptionImageUrls,
+      image, // هذا رابط الصورة من Cloudinary
+      descriptionImages, // هذه مصفوفة روابط الصور من Cloudinary
     });
 
     await event.save();
     res.status(201).json(event);
   } catch (err) {
+    console.error(err)
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
