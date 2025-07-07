@@ -7,6 +7,8 @@ const eventRoutes = require('./routes/eventRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const uploadRoutes = require('./routes/upload')
+
 
 
 
@@ -21,6 +23,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes); 
+app.use('/api/upload', uploadRoutes)
 
 
 

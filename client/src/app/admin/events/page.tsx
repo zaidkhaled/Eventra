@@ -105,55 +105,129 @@ const [formData, setFormData] = useState({
     onEditOpen();
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 const handleSaveEdit = async () => {
   if (!selectedEvent) return;
 
-  const updatedFormData = new FormData();
-  updatedFormData.append('title', formData.title);
-  updatedFormData.append('description', formData.description);
-  updatedFormData.append('location', formData.location);
-  updatedFormData.append('date', formData.date);
-
-  if (formData.newImageFile) {
-    updatedFormData.append('image', formData.newImageFile);
-  }
-
-  if (formData.newDescriptionImages) {
-
-
-    
-formData.newDescriptionImages.forEach((file) => {
-  if (file instanceof File) {
-    updatedFormData.append('descriptionImages', file);
-  }
-});
-
-  }
-
   try {
-    const res = await axios.put(`https://eventra-rhna.onrender.com/api/events/${selectedEvent._id}`, updatedFormData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    let coverImageUrl = formData.newImageFile as string;
+    if (formData.newImageFile instanceof File) {
+      const form = new FormData();
+      form.append('file', formData.newImageFile);
+      const uploadRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', form);
+      coverImageUrl = uploadRes.data.url;
+    }
+
+    const descriptionImageUrls: string[] = [];
+    for (const file of formData.newDescriptionImages) {
+      if (file instanceof File) {
+        const form = new FormData();
+        form.append('file', file);
+        const uploadRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', form);
+        descriptionImageUrls.push(uploadRes.data.url);
+      } else {
+        descriptionImageUrls.push(file); // رابط موجود مسبقًا
+      }
+    }
+
+    await axios.put(`https://eventra-rhna.onrender.com/api/events/${selectedEvent._id}`, {
+      title: formData.title,
+      description: formData.description,
+      location: formData.location,
+      date: formData.date,
+      image: coverImageUrl,
+      descriptionImages: descriptionImageUrls,
     });
 
-    toast({
-      title: t('event_updated'),
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast({ title: t('event_updated'), status: 'success', duration: 3000, isClosable: true });
     onEditClose();
     fetchEvents();
   } catch (err) {
-    toast({
-      title: t('failed_to_update_event'),
-      status: 'error',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast({ title: t('failed_to_update_event'), status: 'error', duration: 3000, isClosable: true });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const handleSaveEdit = async () => {
+//   if (!selectedEvent) return;
+
+//   const updatedFormData = new FormData();
+//   updatedFormData.append('title', formData.title);
+//   updatedFormData.append('description', formData.description);
+//   updatedFormData.append('location', formData.location);
+//   updatedFormData.append('date', formData.date);
+
+//   if (formData.newImageFile) {
+//     updatedFormData.append('image', formData.newImageFile);
+//   }
+
+//   if (formData.newDescriptionImages) {
+
+
+    
+// formData.newDescriptionImages.forEach((file) => {
+//   if (file instanceof File) {
+//     updatedFormData.append('descriptionImages', file);
+//   }
+// });
+
+//   }
+
+//   try {
+//     const res = await axios.put(`https://eventra-rhna.onrender.com/api/events/${selectedEvent._id}`, updatedFormData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
+
+//     toast({
+//       title: t('event_updated'),
+//       status: 'success',
+//       duration: 3000,
+//       isClosable: true,
+//     });
+//     onEditClose();
+//     fetchEvents();
+//   } catch (err) {
+//     toast({
+//       title: t('failed_to_update_event'),
+//       status: 'error',
+//       duration: 3000,
+//       isClosable: true,
+//     });
+//   }
+// };
 
 
 
@@ -241,35 +315,42 @@ const handleDeleteCoverImage = async (eventId: string) => {
 
 
 
+
+
+
+
+
 const handleCreateEvent = async () => {
-  const formData = new FormData();
-  formData.append('title', newEvent.title);
-  formData.append('description', newEvent.description);
-  formData.append('location', newEvent.location);
-  formData.append('date', newEvent.date);
-
-  if (newEvent.imageFile) {
-    formData.append('image', newEvent.imageFile);
-  }
-
-  // إضافة الصور الوصفية المتعددة
-  newEvent.descriptionImages.forEach((file, index) => {
-    formData.append('descriptionImages', file); // ملاحظة: نفس الاسم ليقرأها multer كـ array
-  });
-
   try {
-    const res = await axios.post('https://eventra-rhna.onrender.com/api/events/with-images', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    // 1. رفع صورة الغلاف
+    let coverImageUrl = '';
+    if (newEvent.imageFile) {
+      const coverForm = new FormData();
+      coverForm.append('file', newEvent.imageFile);
+      const coverRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', coverForm);
+      coverImageUrl = coverRes.data.url;
+    }
+
+    // 2. رفع الصور الوصفية
+    const descriptionImageUrls: string[] = [];
+    for (const file of newEvent.descriptionImages) {
+      const descForm = new FormData();
+      descForm.append('file', file);
+      const descRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', descForm);
+      descriptionImageUrls.push(descRes.data.url);
+    }
+
+    // 3. إرسال بيانات الفعالية مع روابط الصور
+    await axios.post('https://eventra-rhna.onrender.com/api/events/with-images', {
+      title: newEvent.title,
+      description: newEvent.description,
+      location: newEvent.location,
+      date: newEvent.date,
+      image: coverImageUrl,
+      descriptionImages: descriptionImageUrls,
     });
 
-    toast({
-      title: t('event_created'),
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast({ title: t('event_created'), status: 'success', duration: 3000, isClosable: true });
 
     setNewEvent({
       title: '',
@@ -283,14 +364,81 @@ const handleCreateEvent = async () => {
     onAddClose();
     fetchEvents();
   } catch (err) {
-    toast({
-      title: t('event_create_failed'),
-      status: 'error',
-      duration: 3000,
-      isClosable: true,
-    });
+    toast({ title: t('event_create_failed'), status: 'error', duration: 3000, isClosable: true });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const handleCreateEvent = async () => {
+
+
+
+//   const formData = new FormData();
+//   formData.append('title', newEvent.title);
+//   formData.append('description', newEvent.description);
+//   formData.append('location', newEvent.location);
+//   formData.append('date', newEvent.date);
+
+//   if (newEvent.imageFile) {
+//     formData.append('image', newEvent.imageFile);
+//   }
+
+//   // إضافة الصور الوصفية المتعددة
+//   newEvent.descriptionImages.forEach((file, index) => {
+//     formData.append('descriptionImages', file); // ملاحظة: نفس الاسم ليقرأها multer كـ array
+//   });
+
+//   try {
+//     const res = await axios.post('https://eventra-rhna.onrender.com/api/events/with-images', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
+
+//     toast({
+//       title: t('event_created'),
+//       status: 'success',
+//       duration: 3000,
+//       isClosable: true,
+//     });
+
+//     setNewEvent({
+//       title: '',
+//       description: '',
+//       location: '',
+//       date: '',
+//       imageFile: null,
+//       descriptionImages: [],
+//     });
+
+//     onAddClose();
+//     fetchEvents();
+//   } catch (err) {
+//     toast({
+//       title: t('event_create_failed'),
+//       status: 'error',
+//       duration: 3000,
+//       isClosable: true,
+//     });
+//   }
+// };
 
 
   return (
