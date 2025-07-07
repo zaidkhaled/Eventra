@@ -138,31 +138,73 @@ exports.createEventWithImages = async (req, res) => {
 
 
 
+// exports.updateEvent = async (req, res) => {
+//   try {
+//     const event = await Event.findById(req.params.id);
+//     if (!event) return res.status(404).json({ message: 'Event not found' });
+
+//     const { title, description, location, date } = req.body;
+
+//     if (title) event.title = title;
+//     if (description) event.description = description;
+//     if (location) event.location = location;
+//     if (date) event.date = date;
+
+//     // تحديث صورة الغلاف إن وجدت
+//     if (req.files?.image?.[0]) {
+//       event.image = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
+//     }
+
+//     // تحديث صور الوصف
+//     if (req.files?.descriptionImages?.length) {
+//       const newImages = req.files.descriptionImages.map(
+//         (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
+//       );
+
+//       const currentImagesCount = event.descriptionImages?.length || 0;
+//       const totalAfterUpdate = currentImagesCount + newImages.length;
+
+//       if (totalAfterUpdate > 10) {
+//         return res.status(400).json({
+//           message: 'Total description images cannot exceed 10.',
+//         });
+//       }
+
+//       event.descriptionImages = [...event.descriptionImages, ...newImages];
+//     }
+
+//     await event.save();
+//     res.status(200).json(event);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
+
+
+
+
+
 exports.updateEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    const { title, description, location, date } = req.body;
+    const { title, description, location, date, image, newDescriptionImages } = req.body;
 
     if (title) event.title = title;
     if (description) event.description = description;
     if (location) event.location = location;
     if (date) event.date = date;
 
-    // تحديث صورة الغلاف إن وجدت
-    if (req.files?.image?.[0]) {
-      event.image = `https://eventra-rhna.onrender.com/uploads/${req.files.image[0].filename}`;
+    if (image) {
+      event.image = image; // رابط صورة من Cloudinary
     }
 
-    // تحديث صور الوصف
-    if (req.files?.descriptionImages?.length) {
-      const newImages = req.files.descriptionImages.map(
-        (file) => `https://eventra-rhna.onrender.com/uploads/${file.filename}`
-      );
-
+    if (newDescriptionImages?.length) {
       const currentImagesCount = event.descriptionImages?.length || 0;
-      const totalAfterUpdate = currentImagesCount + newImages.length;
+      const totalAfterUpdate = currentImagesCount + newDescriptionImages.length;
 
       if (totalAfterUpdate > 10) {
         return res.status(400).json({
@@ -170,7 +212,7 @@ exports.updateEvent = async (req, res) => {
         });
       }
 
-      event.descriptionImages = [...event.descriptionImages, ...newImages];
+      event.descriptionImages = [...event.descriptionImages, ...newDescriptionImages];
     }
 
     await event.save();
@@ -179,6 +221,16 @@ exports.updateEvent = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
 
 exports.deleteEvent = async (req, res) => {
   try {

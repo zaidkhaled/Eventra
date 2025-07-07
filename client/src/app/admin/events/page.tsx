@@ -116,48 +116,57 @@ const [formData, setFormData] = useState({
 
 
 
-
-
 const handleSaveEdit = async () => {
   if (!selectedEvent) return;
 
+  // 1. ارفع صورة الغلاف إذا كانت جديدة
+  let uploadedCoverImage = selectedEvent.image;
+  if (formData.newImageFile instanceof File) {
+    const res = await uploadToCloudinary(formData.newImageFile);
+    if (res?.url) {
+      uploadedCoverImage = res.url;
+    }
+  }
+
+  // 2. ارفع الصور الوصفية الجديدة
+  const newDescImageUrls: string[] = [];
+  for (const img of formData.newDescriptionImages) {
+    if (img instanceof File) {
+      const res = await uploadToCloudinary(img);
+      if (res?.url) newDescImageUrls.push(res.url);
+    }
+  }
+
+  // 3. أرسل البيانات إلى الباك
   try {
-    let coverImageUrl = formData.newImageFile as string;
-    if (formData.newImageFile instanceof File) {
-      const form = new FormData();
-      form.append('file', formData.newImageFile);
-      const uploadRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', form);
-      coverImageUrl = uploadRes.data.url;
-    }
-
-    const descriptionImageUrls: string[] = [];
-    for (const file of formData.newDescriptionImages) {
-      if (file instanceof File) {
-        const form = new FormData();
-        form.append('file', file);
-        const uploadRes = await axios.post('https://eventra-rhna.onrender.com/api/upload', form);
-        descriptionImageUrls.push(uploadRes.data.url);
-      } else {
-        descriptionImageUrls.push(file); // رابط موجود مسبقًا
-      }
-    }
-
     await axios.put(`https://eventra-rhna.onrender.com/api/events/${selectedEvent._id}`, {
       title: formData.title,
       description: formData.description,
       location: formData.location,
       date: formData.date,
-      image: coverImageUrl,
-      descriptionImages: descriptionImageUrls,
+      image: uploadedCoverImage,
+      newDescriptionImages: newDescImageUrls,
     });
 
-    toast({ title: t('event_updated'), status: 'success', duration: 3000, isClosable: true });
+    toast({
+      title: t('event_updated'),
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+
     onEditClose();
     fetchEvents();
   } catch (err) {
-    toast({ title: t('failed_to_update_event'), status: 'error', duration: 3000, isClosable: true });
+    toast({
+      title: t('failed_to_update_event'),
+      status: 'error',
+      duration: 3000,
+      isClosable: true,
+    });
   }
 };
+
 
 
 
@@ -440,6 +449,19 @@ const handleCreateEvent = async () => {
 //   }
 // };
 
+const uploadToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'your_unsigned_preset'); // استبدل بقيمتك من Cloudinary
+
+  try {
+    const res = await axios.post('https://api.cloudinary.com/v1_1/daqgjgomk/image/upload', formData);
+    return res.data;
+  } catch (err) {
+    console.error('Upload failed', err);
+    return null;
+  }
+};
 
   return (
     <Box p={4}>
